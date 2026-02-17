@@ -57,17 +57,17 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
     if (pin_state == GPIO_PIN_RESET)                                        // active low: pressed
     {
-        Button_TypeDef btn_index = BUTTONMAX;
-        if (pressed_pin == GPIO_PIN_0) btn_index = BUTTON0;
-        else if (pressed_pin == GPIO_PIN_1) btn_index = BUTTON1;
-        else if (pressed_pin == GPIO_PIN_2) btn_index = BUTTON2;
-        else if (pressed_pin == GPIO_PIN_3) btn_index = BUTTON3;
-        else if (pressed_pin == GPIO_PIN_4) btn_index = BUTTON4;
-        else if (pressed_pin == GPIO_PIN_5) btn_index = BUTTON5;
+        Button_TypeDef Btn_Input = BUTTONMAX;
+        if (pressed_pin == GPIO_PIN_0) Btn_Input = BUTTON0;
+        else if (pressed_pin == GPIO_PIN_1) Btn_Input = BUTTON1;
+        else if (pressed_pin == GPIO_PIN_2) Btn_Input = BUTTON2;
+        else if (pressed_pin == GPIO_PIN_3) Btn_Input = BUTTON3;
+        else if (pressed_pin == GPIO_PIN_4) Btn_Input = BUTTON4;
+        else if (pressed_pin == GPIO_PIN_5) Btn_Input = BUTTON5;
 
-        if (btn_index != BUTTONMAX)
+        if (Btn_Input != BUTTONMAX)
         {
-        	UI8 btn_signal = 48 + btn_index;
+        	UI8 btn_signal = 48 + Btn_Input;
             HAL_UART_Transmit(&huart1, &btn_signal, 1, 100);
         }
     }
