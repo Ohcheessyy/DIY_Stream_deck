@@ -31,7 +31,8 @@
 // SPI Configuration
 #define SSD1306_SPI_PORT        hspi2
 #define SSD1306_CS_Port         GPIOB
-#define SSD1306_CS_Pin          GPIO_PIN_0
+// Multiple CS PIN
+//#define SSD1306_CS_Pin          GPIO_PIN
 #define SSD1306_DC_Port         GPIOB
 #define SSD1306_DC_Pin          GPIO_PIN_10
 #define SSD1306_Reset_Port      GPIOB

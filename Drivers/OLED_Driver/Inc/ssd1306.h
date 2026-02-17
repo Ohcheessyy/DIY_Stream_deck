@@ -159,7 +159,7 @@ typedef struct {
 // Procedure definitions
 void ssd1306_Init(void);
 void ssd1306_Fill(SSD1306_COLOR color);
-void ssd1306_UpdateScreen(void);
+void ssd1306_UpdateScreen(uint16_t cs_pin);
 void ssd1306_DrawPixel(uint8_t x, uint8_t y, SSD1306_COLOR color);
 char ssd1306_WriteChar(char ch, SSD1306_Font_t Font, SSD1306_COLOR color);
 char ssd1306_WriteString(char* str, SSD1306_Font_t Font, SSD1306_COLOR color);
@@ -192,13 +192,13 @@ void ssd1306_DrawBitmap(uint8_t x, uint8_t y, const unsigned char* bitmap, uint8
  * @note Contrast increases as the value increases.
  * @note RESET = 7Fh.
  */
-void ssd1306_SetContrast(const uint8_t value);
+void ssd1306_SetContrast(const uint8_t value, uint16_t cs_pin);
 
 /**
  * @brief Set Display ON/OFF.
  * @param[in] on 0 for OFF, any for ON.
  */
-void ssd1306_SetDisplayOn(const uint8_t on);
+void ssd1306_SetDisplayOn(const uint8_t on, uint16_t cs_pin);
 
 /**
  * @brief Reads DisplayOn state.
@@ -208,9 +208,9 @@ void ssd1306_SetDisplayOn(const uint8_t on);
 uint8_t ssd1306_GetDisplayOn();
 
 // Low-level procedures
-void ssd1306_Reset(void);
-void ssd1306_WriteCommand(uint8_t byte);
-void ssd1306_WriteData(uint8_t* buffer, size_t buff_size);
+void ssd1306_Reset(uint16_t cs_pin);
+void ssd1306_WriteCommand(uint8_t byte, uint16_t cs_pin);
+void ssd1306_WriteData(uint8_t* buffer, size_t buff_size, uint16_t cs_pin);
 SSD1306_Error_t ssd1306_FillBuffer(uint8_t* buf, uint32_t len);
 
 _END_STD_C

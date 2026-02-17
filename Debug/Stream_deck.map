@@ -730,23 +730,25 @@ Discarded input sections
  .text          0x00000000        0x0 ./Drivers/OLED_Driver/Src/ssd1306.o
  .data          0x00000000        0x0 ./Drivers/OLED_Driver/Src/ssd1306.o
  .bss           0x00000000        0x0 ./Drivers/OLED_Driver/Src/ssd1306.o
+ .data.SSD1306_CSPin
+                0x00000000        0xc ./Drivers/OLED_Driver/Src/ssd1306.o
  .text.ssd1306_Reset
-                0x00000000       0x3c ./Drivers/OLED_Driver/Src/ssd1306.o
- .text.ssd1306_WriteCommand
                 0x00000000       0x48 ./Drivers/OLED_Driver/Src/ssd1306.o
+ .text.ssd1306_WriteCommand
+                0x00000000       0x54 ./Drivers/OLED_Driver/Src/ssd1306.o
  .text.ssd1306_WriteData
-                0x00000000       0x4c ./Drivers/OLED_Driver/Src/ssd1306.o
+                0x00000000       0x54 ./Drivers/OLED_Driver/Src/ssd1306.o
  .bss.SSD1306_Buffer
                 0x00000000      0x400 ./Drivers/OLED_Driver/Src/ssd1306.o
  .bss.SSD1306   0x00000000        0x6 ./Drivers/OLED_Driver/Src/ssd1306.o
  .text.ssd1306_FillBuffer
                 0x00000000       0x34 ./Drivers/OLED_Driver/Src/ssd1306.o
  .text.ssd1306_Init
-                0x00000000       0xd4 ./Drivers/OLED_Driver/Src/ssd1306.o
+                0x00000000      0x218 ./Drivers/OLED_Driver/Src/ssd1306.o
  .text.ssd1306_Fill
                 0x00000000       0x30 ./Drivers/OLED_Driver/Src/ssd1306.o
  .text.ssd1306_UpdateScreen
-                0x00000000       0x50 ./Drivers/OLED_Driver/Src/ssd1306.o
+                0x00000000       0x60 ./Drivers/OLED_Driver/Src/ssd1306.o
  .text.ssd1306_DrawPixel
                 0x00000000       0xa8 ./Drivers/OLED_Driver/Src/ssd1306.o
  .text.ssd1306_WriteChar
@@ -780,15 +782,15 @@ Discarded input sections
  .text.ssd1306_DrawBitmap
                 0x00000000       0xb6 ./Drivers/OLED_Driver/Src/ssd1306.o
  .text.ssd1306_SetContrast
-                0x00000000       0x26 ./Drivers/OLED_Driver/Src/ssd1306.o
+                0x00000000       0x34 ./Drivers/OLED_Driver/Src/ssd1306.o
  .text.ssd1306_SetDisplayOn
-                0x00000000       0x3c ./Drivers/OLED_Driver/Src/ssd1306.o
+                0x00000000       0x44 ./Drivers/OLED_Driver/Src/ssd1306.o
  .text.ssd1306_GetDisplayOn
                 0x00000000       0x18 ./Drivers/OLED_Driver/Src/ssd1306.o
  .rodata.CIRCLE_APPROXIMATION_SEGMENTS.0
                 0x00000000        0x1 ./Drivers/OLED_Driver/Src/ssd1306.o
- .debug_info    0x00000000     0x1330 ./Drivers/OLED_Driver/Src/ssd1306.o
- .debug_abbrev  0x00000000      0x349 ./Drivers/OLED_Driver/Src/ssd1306.o
+ .debug_info    0x00000000     0x13c6 ./Drivers/OLED_Driver/Src/ssd1306.o
+ .debug_abbrev  0x00000000      0x35a ./Drivers/OLED_Driver/Src/ssd1306.o
  .debug_aranges
                 0x00000000       0xe8 ./Drivers/OLED_Driver/Src/ssd1306.o
  .debug_rnglists
@@ -806,7 +808,7 @@ Discarded input sections
  .debug_macro   0x00000000       0x2a ./Drivers/OLED_Driver/Src/ssd1306.o
  .debug_macro   0x00000000       0x43 ./Drivers/OLED_Driver/Src/ssd1306.o
  .debug_macro   0x00000000       0x34 ./Drivers/OLED_Driver/Src/ssd1306.o
- .debug_macro   0x00000000       0x70 ./Drivers/OLED_Driver/Src/ssd1306.o
+ .debug_macro   0x00000000       0x6a ./Drivers/OLED_Driver/Src/ssd1306.o
  .debug_macro   0x00000000      0x2a1 ./Drivers/OLED_Driver/Src/ssd1306.o
  .debug_macro   0x00000000       0x28 ./Drivers/OLED_Driver/Src/ssd1306.o
  .debug_macro   0x00000000       0x28 ./Drivers/OLED_Driver/Src/ssd1306.o
@@ -839,7 +841,7 @@ Discarded input sections
  .debug_macro   0x00000000       0x47 ./Drivers/OLED_Driver/Src/ssd1306.o
  .debug_macro   0x00000000      0x2aa ./Drivers/OLED_Driver/Src/ssd1306.o
  .debug_macro   0x00000000      0x126 ./Drivers/OLED_Driver/Src/ssd1306.o
- .debug_macro   0x00000000       0x22 ./Drivers/OLED_Driver/Src/ssd1306.o
+ .debug_macro   0x00000000       0x28 ./Drivers/OLED_Driver/Src/ssd1306.o
  .debug_macro   0x00000000      0x370 ./Drivers/OLED_Driver/Src/ssd1306.o
  .debug_macro   0x00000000       0x16 ./Drivers/OLED_Driver/Src/ssd1306.o
  .debug_macro   0x00000000       0x4a ./Drivers/OLED_Driver/Src/ssd1306.o
@@ -856,10 +858,10 @@ Discarded input sections
  .debug_macro   0x00000000       0x29 ./Drivers/OLED_Driver/Src/ssd1306.o
  .debug_macro   0x00000000       0x16 ./Drivers/OLED_Driver/Src/ssd1306.o
  .debug_macro   0x00000000       0x20 ./Drivers/OLED_Driver/Src/ssd1306.o
- .debug_line    0x00000000     0x1222 ./Drivers/OLED_Driver/Src/ssd1306.o
- .debug_str     0x00000000    0x8bfe7 ./Drivers/OLED_Driver/Src/ssd1306.o
+ .debug_line    0x00000000     0x123b ./Drivers/OLED_Driver/Src/ssd1306.o
+ .debug_str     0x00000000    0x8bffd ./Drivers/OLED_Driver/Src/ssd1306.o
  .comment       0x00000000       0x44 ./Drivers/OLED_Driver/Src/ssd1306.o
- .debug_frame   0x00000000      0x3e0 ./Drivers/OLED_Driver/Src/ssd1306.o
+ .debug_frame   0x00000000      0x3f4 ./Drivers/OLED_Driver/Src/ssd1306.o
  .ARM.attributes
                 0x00000000       0x34 ./Drivers/OLED_Driver/Src/ssd1306.o
  .group         0x00000000        0xc ./Drivers/OLED_Driver/Src/ssd1306_fonts.o
@@ -954,7 +956,7 @@ Discarded input sections
  .debug_macro   0x00000000       0x2a ./Drivers/OLED_Driver/Src/ssd1306_fonts.o
  .debug_macro   0x00000000       0x43 ./Drivers/OLED_Driver/Src/ssd1306_fonts.o
  .debug_macro   0x00000000       0x34 ./Drivers/OLED_Driver/Src/ssd1306_fonts.o
- .debug_macro   0x00000000       0x70 ./Drivers/OLED_Driver/Src/ssd1306_fonts.o
+ .debug_macro   0x00000000       0x6a ./Drivers/OLED_Driver/Src/ssd1306_fonts.o
  .debug_macro   0x00000000      0x2a1 ./Drivers/OLED_Driver/Src/ssd1306_fonts.o
  .debug_macro   0x00000000       0x28 ./Drivers/OLED_Driver/Src/ssd1306_fonts.o
  .debug_macro   0x00000000       0x28 ./Drivers/OLED_Driver/Src/ssd1306_fonts.o
@@ -987,9 +989,9 @@ Discarded input sections
  .debug_macro   0x00000000       0x47 ./Drivers/OLED_Driver/Src/ssd1306_fonts.o
  .debug_macro   0x00000000      0x2aa ./Drivers/OLED_Driver/Src/ssd1306_fonts.o
  .debug_macro   0x00000000      0x126 ./Drivers/OLED_Driver/Src/ssd1306_fonts.o
- .debug_macro   0x00000000       0x22 ./Drivers/OLED_Driver/Src/ssd1306_fonts.o
+ .debug_macro   0x00000000       0x28 ./Drivers/OLED_Driver/Src/ssd1306_fonts.o
  .debug_line    0x00000000      0x8b0 ./Drivers/OLED_Driver/Src/ssd1306_fonts.o
- .debug_str     0x00000000    0x87f7d ./Drivers/OLED_Driver/Src/ssd1306_fonts.o
+ .debug_str     0x00000000    0x87f7e ./Drivers/OLED_Driver/Src/ssd1306_fonts.o
  .comment       0x00000000       0x44 ./Drivers/OLED_Driver/Src/ssd1306_fonts.o
  .ARM.attributes
                 0x00000000       0x34 ./Drivers/OLED_Driver/Src/ssd1306_fonts.o
