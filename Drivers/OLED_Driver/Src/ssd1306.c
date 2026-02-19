@@ -3,13 +3,6 @@
 #include <stdlib.h>
 #include <string.h>  // For memcpy
 
-uint16_t SSD1306_CSPin[6] = {GPIO_PIN_0,
-                             GPIO_PIN_1,
-                             GPIO_PIN_2,
-                             GPIO_PIN_6,
-                             GPIO_PIN_7,
-                             GPIO_PIN_8};
-
 #if defined(SSD1306_USE_I2C)
 
 void ssd1306_Reset(void) {
@@ -77,107 +70,85 @@ SSD1306_Error_t ssd1306_FillBuffer(uint8_t* buf, uint32_t len) {
 }
 
 /* Initialize the oled screen */
-void ssd1306_Init(void) {
+void ssd1306_Init(uint16_t cs_pin) {
     // Reset OLED
-    for (int i = 0; i < 5; i++) {
-        
-        ssd1306_Reset(SSD1306_CSPin[i]);
-            // Wait for the screen to boot
-        HAL_Delay(100);
-
-        // Init OLED
-        ssd1306_SetDisplayOn(0, SSD1306_CSPin[i]); //display off
-
-        ssd1306_WriteCommand(0x20, SSD1306_CSPin[i]); //Set Memory Addressing Mode
-        ssd1306_WriteCommand(0x00, SSD1306_CSPin[i]); // 00b,Horizontal Addressing Mode; 01b,Vertical Addressing Mode;
-                                    // 10b,Page Addressing Mode (RESET); 11b,Invalid
-
-        ssd1306_WriteCommand(0xB0, SSD1306_CSPin[i]); //Set Page Start Address for Page Addressing Mode,0-7
-
-    #ifdef SSD1306_MIRROR_VERT
-        ssd1306_WriteCommand(0xC0, SSD1306_CSPin[i]); // Mirror vertically
-    #else
-        ssd1306_WriteCommand(0xC8, SSD1306_CSPin[i]); //Set COM Output Scan Direction
-    #endif
-
-        ssd1306_WriteCommand(0x00, SSD1306_CSPin[i]); //---set low column address
-        ssd1306_WriteCommand(0x10, SSD1306_CSPin[i]); //---set high column address
-
-        ssd1306_WriteCommand(0x40, SSD1306_CSPin[i]); //--set start line address - CHECK
-
-        ssd1306_SetContrast(0xFF, SSD1306_CSPin[i]); // Set max contrast
-
-    #ifdef SSD1306_MIRROR_HORIZ
-        ssd1306_WriteCommand(0xA0, SSD1306_CSPin[i]); // Mirror horizontally
-    #else
-        ssd1306_WriteCommand(0xA1, SSD1306_CSPin[i]); //--set segment re-map 0 to 127 - CHECK
-    #endif
-
-    #ifdef SSD1306_INVERSE_COLOR
-        ssd1306_WriteCommand(0xA7, SSD1306_CSPin[i]); //--set inverse color
-    #else
-        ssd1306_WriteCommand(0xA6, SSD1306_CSPin[i]); //--set normal color
-    #endif
-
-    // Set multiplex ratio.
-    #if (SSD1306_HEIGHT == 128)
-        // Found in the Luma Python lib for SH1106.
-        ssd1306_WriteCommand(0xFF, SSD1306_CSPin[i]); // 0xFF is a magic number to indicate that this is an SH1106 display. The SH1106 is a common 128px high "clone" of the SSD1306.
-    #else
-        ssd1306_WriteCommand(0xA8, SSD1306_CSPin[i]); //--set multiplex ratio(1 to 64) - CHECK
-    #endif
-
-    #if (SSD1306_HEIGHT == 32)
-        ssd1306_WriteCommand(0x1F, SSD1306_CSPin[i]); //
-    #elif (SSD1306_HEIGHT == 64)
-        ssd1306_WriteCommand(0x3F, SSD1306_CSPin[i]); //
-    #elif (SSD1306_HEIGHT == 128)
-        ssd1306_WriteCommand(0x3F, SSD1306_CSPin[i]); // Seems to work for 128px high displays too.
-    #else
-    #error "Only 32, 64, or 128 lines of height are supported!"
-    #endif
-
-        ssd1306_WriteCommand(0xA4, SSD1306_CSPin[i]); //0xa4,Output follows RAM content;0xa5,Output ignores RAM content
-
-        ssd1306_WriteCommand(0xD3, SSD1306_CSPin[i]); //-set display offset - CHECK
-        ssd1306_WriteCommand(0x00, SSD1306_CSPin[i]); //-not offset
-
-        ssd1306_WriteCommand(0xD5, SSD1306_CSPin[i]); //--set display clock divide ratio/oscillator frequency
-        ssd1306_WriteCommand(0xF0, SSD1306_CSPin[i] ); //--set divide ratio
-
-        ssd1306_WriteCommand(0xD9, SSD1306_CSPin[i]); //--set pre-charge period
-        ssd1306_WriteCommand(0x22, SSD1306_CSPin[i]); //
-
-        ssd1306_WriteCommand(0xDA, SSD1306_CSPin[i]); //--set com pins hardware configuration - CHECK
-    #if (SSD1306_HEIGHT == 32)
-        ssd1306_WriteCommand(0x02, SSD1306_CSPin[i]);
-    #elif (SSD1306_HEIGHT == 64)
-        ssd1306_WriteCommand(0x12, SSD1306_CSPin[i]);
-    #elif (SSD1306_HEIGHT == 128)
-        ssd1306_WriteCommand(0x12, SSD1306_CSPin[i]);
-    #else
-    #error "Only 32, 64, or 128 lines of height are supported!"
-    #endif
-
-        ssd1306_WriteCommand(0xDB, SSD1306_CSPin[i]); //--set vcomh
-        ssd1306_WriteCommand(0x20, SSD1306_CSPin[i]); //0x20,0.77xVcc
-
-        ssd1306_WriteCommand(0x8D, SSD1306_CSPin[i]); //--set DC-DC enable
-        ssd1306_WriteCommand(0x14, SSD1306_CSPin[i]); //
-        ssd1306_SetDisplayOn(1, SSD1306_CSPin[i]); //--turn on SSD1306 panel
-
-        // Clear screen
-        ssd1306_Fill(Black);
-        
-        // Flush buffer to screen
-        ssd1306_UpdateScreen(SSD1306_CSPin[i]);
-        
-        // Set default values for screen object
-        SSD1306.CurrentX = 0;
-        SSD1306.CurrentY = 0;
-        
-        SSD1306.Initialized = 1;    
-    }
+    ssd1306_Reset(cs_pin);
+    // Wait for the screen to boot
+    HAL_Delay(100);
+    // Init OLED
+    ssd1306_SetDisplayOn(0, cs_pin); //display off
+    ssd1306_WriteCommand(0x20, cs_pin); //Set Memory Addressing Mode
+    ssd1306_WriteCommand(0x00, cs_pin); // 00b,Horizontal Addressing Mode; 01b,Vertical Addressing Mode;
+                                // 10b,Page Addressing Mode (RESET); 11b,Invalid
+    ssd1306_WriteCommand(0xB0, cs_pin); //Set Page Start Address for Page Addressing Mode,0-7
+#ifdef SSD1306_MIRROR_VERT
+    ssd1306_WriteCommand(0xC0, cs_pin); // Mirror vertically
+#else
+    ssd1306_WriteCommand(0xC8, cs_pin); //Set COM Output Scan Direction
+#endif
+    ssd1306_WriteCommand(0x00, cs_pin); //---set low column address
+    ssd1306_WriteCommand(0x10, cs_pin); //---set high column address
+    ssd1306_WriteCommand(0x40, cs_pin); //--set start line address - CHECK
+    ssd1306_SetContrast(0xFF, cs_pin); // Set max contrast
+#ifdef SSD1306_MIRROR_HORIZ
+    ssd1306_WriteCommand(0xA0, cs_pin); // Mirror horizontally
+#else
+    ssd1306_WriteCommand(0xA1, cs_pin); //--set segment re-map 0 to 127 - CHECK
+#endif
+#ifdef SSD1306_INVERSE_COLOR
+    ssd1306_WriteCommand(0xA7, cs_pin); //--set inverse color
+#else
+    ssd1306_WriteCommand(0xA6, cs_pin); //--set normal color
+#endif
+// Set multiplex ratio.
+#if (SSD1306_HEIGHT == 128)
+    // Found in the Luma Python lib for SH1106.
+    ssd1306_WriteCommand(0xFF, cs_pin); // 0xFF is a magic number to indicate that this is an SH1106 display. The SH1106 is a common 128px high "clone" of the SSD1306.
+#else
+    ssd1306_WriteCommand(0xA8, cs_pin); //--set multiplex ratio(1 to 64) - CHECK
+#endif
+#if (SSD1306_HEIGHT == 32)
+    ssd1306_WriteCommand(0x1F, cs_pin); //
+#elif (SSD1306_HEIGHT == 64)
+    ssd1306_WriteCommand(0x3F, cs_pin); //
+#elif (SSD1306_HEIGHT == 128)
+    ssd1306_WriteCommand(0x3F, cs_pin); // Seems to work for 128px high displays too.
+#else
+#error "Only 32, 64, or 128 lines of height are supported!"
+#endif
+    ssd1306_WriteCommand(0xA4, cs_pin); //0xa4,Output follows RAM content;0xa5,Output ignores RAM content
+    ssd1306_WriteCommand(0xD3, cs_pin); //-set display offset - CHECK
+    ssd1306_WriteCommand(0x00, cs_pin); //-not offset
+    ssd1306_WriteCommand(0xD5, cs_pin); //--set display clock divide ratio/oscillator frequency
+    ssd1306_WriteCommand(0xF0, cs_pin ); //--set divide ratio
+    ssd1306_WriteCommand(0xD9, cs_pin); //--set pre-charge period
+    ssd1306_WriteCommand(0x22, cs_pin); //
+    ssd1306_WriteCommand(0xDA, cs_pin); //--set com pins hardware configuration - CHECK
+#if (SSD1306_HEIGHT == 32)
+    ssd1306_WriteCommand(0x02, cs_pin);
+#elif (SSD1306_HEIGHT == 64)
+    ssd1306_WriteCommand(0x12, cs_pin);
+#elif (SSD1306_HEIGHT == 128)
+    ssd1306_WriteCommand(0x12, cs_pin);
+#else
+#error "Only 32, 64, or 128 lines of height are supported!"
+#endif
+    ssd1306_WriteCommand(0xDB, cs_pin); //--set vcomh
+    ssd1306_WriteCommand(0x20, cs_pin); //0x20,0.77xVcc
+    ssd1306_WriteCommand(0x8D, cs_pin); //--set DC-DC enable
+    ssd1306_WriteCommand(0x14, cs_pin); //
+    ssd1306_SetDisplayOn(1, cs_pin); //--turn on SSD1306 panel
+    // Clear screen
+    ssd1306_Fill(Black);
+    
+    // Flush buffer to screen
+    ssd1306_UpdateScreen(cs_pin);
+    
+    // Set default values for screen object
+    SSD1306.CurrentX = 0;
+    SSD1306.CurrentY = 0;
+    
+    SSD1306.Initialized = 1;    
 }
 
 /* Fill the whole screen with the given color */
