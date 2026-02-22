@@ -72,7 +72,7 @@ SSD1306_Error_t ssd1306_FillBuffer(uint8_t* buf, uint32_t len) {
 /* Initialize the oled screen */
 void ssd1306_Init(uint16_t cs_pin) {
     // Reset OLED
-    ssd1306_Reset(cs_pin);
+    //ssd1306_Reset(cs_pin);
     // Wait for the screen to boot
     HAL_Delay(100);
     // Init OLED

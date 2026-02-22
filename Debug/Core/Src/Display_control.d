@@ -1,4 +1,5 @@
-Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
+Core/Src/Display_control.o: ../Core/Src/Display_control.c \
+ ../Core/Inc/Display_control.h ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../Core/Inc/stm32f4xx_hal_conf.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -28,7 +29,10 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h \
- ../Core/Inc/Display_control.h ../Core/Inc/main.h
+ ../Core/Inc/main.h \
+ C:/Users/Ohcheessyy/Desktop/STM32Project/Stream_deck/Drivers/OLED_Driver/Inc/ssd1306.h \
+ C:/Users/Ohcheessyy/Desktop/STM32Project/Stream_deck/Drivers/OLED_Driver/Inc/ssd1306_conf.h
+../Core/Inc/Display_control.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 ../Core/Inc/stm32f4xx_hal_conf.h:
@@ -59,5 +63,6 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h:
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h:
-../Core/Inc/Display_control.h:
 ../Core/Inc/main.h:
+C:/Users/Ohcheessyy/Desktop/STM32Project/Stream_deck/Drivers/OLED_Driver/Inc/ssd1306.h:
+C:/Users/Ohcheessyy/Desktop/STM32Project/Stream_deck/Drivers/OLED_Driver/Inc/ssd1306_conf.h:

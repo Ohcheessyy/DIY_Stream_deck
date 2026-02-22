@@ -18,7 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "ssd1306.h"
+#include "Display_control.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -98,7 +98,7 @@ int main(void)
   MX_USART1_UART_Init();
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
-  
+  OLED_Init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -108,6 +108,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    OLED_Main();
   }
   /* USER CODE END 3 */
 }

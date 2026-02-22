@@ -1,0 +1,22 @@
+/*
+ * Display_control.h
+ *
+ *  Created on: Feb 22, 2026
+ *      Author: Ohcheessyy
+ */
+
+#ifndef INC_DISPLAY_CONTROL_H_
+#define INC_DISPLAY_CONTROL_H_
+
+#include "main.h"
+
+typedef enum{
+    CS_PIN_1 = GPIO_PIN_0,
+    CS_PIN_2 = GPIO_PIN_1,
+    CS_PIN_3 = GPIO_PIN_2,
+    CS_PIN_4 = GPIO_PIN_6,
+    CS_PIN_5 = GPIO_PIN_7,
+    CS_PIN_6 = GPIO_PIN_8
+}CS_PIN_TypeDef;
+
+#endif /* INC_DISPLAY_CONTROL_H_ */
