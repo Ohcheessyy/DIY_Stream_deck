@@ -20,3 +20,6 @@ typedef enum{
 }CS_PIN_TypeDef;
 
 #endif /* INC_DISPLAY_CONTROL_H_ */
+
+void OLED_Init(void);
+void OLED_Main(void);
