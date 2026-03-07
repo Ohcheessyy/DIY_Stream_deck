@@ -10,8 +10,6 @@
 
 UI16 debounce_pin;                                                         // Variable to store the pin number of the button being debounced
 UI8 debounce_state_flag;                                                   // Flag to indicate if debounce is in progress (1) or not (0)
-
-/* previous logic level for each button; 0=released, 1=pressed */
 UI8 prevBtnState[BUTTONMAX];
 UI8 currBtnState[BUTTONMAX];
 

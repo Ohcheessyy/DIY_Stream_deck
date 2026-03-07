@@ -21,7 +21,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "Display_control.h"
-#include "Button.h"  /* edge-detect helper */
+#include "Button.h"
+#include "OLED.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -103,6 +104,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   OLED_Init();
   Button_Init();              /* clear previous states before use */
+  State_Transition_Init();  /* Initialize the state transition system if needed */
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -112,7 +114,8 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    OLED_Main();
+    State_Transition_Main();
+    Button_State_Reset();  /* reset button states after processing */
   }
   /* USER CODE END 3 */
 }

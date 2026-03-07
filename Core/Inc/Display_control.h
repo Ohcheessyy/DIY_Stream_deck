@@ -10,16 +10,8 @@
 
 #include "main.h"
 
-typedef enum{
-    CS_PIN_1 = GPIO_PIN_0,
-    CS_PIN_2 = GPIO_PIN_1,
-    CS_PIN_3 = GPIO_PIN_2,
-    CS_PIN_4 = GPIO_PIN_6,
-    CS_PIN_5 = GPIO_PIN_7,
-    CS_PIN_6 = GPIO_PIN_8
-}CS_PIN_TypeDef;
+void State_Transition_Init(void);
+void State_Transition_Main(void);
+
 
 #endif /* INC_DISPLAY_CONTROL_H_ */
-
-void OLED_Init(void);
-void OLED_Main(void);
