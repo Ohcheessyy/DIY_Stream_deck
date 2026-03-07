@@ -6,31 +6,46 @@
  */
 
 #include "main.h"
-
-typedef enum
-{
-    BUTTON0 = 0,
-    BUTTON1,
-    BUTTON2,
-    BUTTON3,
-    BUTTON4,
-    BUTTON5,
-    BUTTONMAX
-} Button_TypeDef;
+#include "Button.h"
 
 UI16 debounce_pin;                                                         // Variable to store the pin number of the button being debounced
 UI8 debounce_state_flag;                                                   // Flag to indicate if debounce is in progress (1) or not (0)
+
+/* previous logic level for each button; 0=released, 1=pressed */
+UI8 prevBtnState[BUTTONMAX];
+UI8 currBtnState[BUTTONMAX];
+
+// Button initialization function to clear previous states before use
+
+void Button_Init(void)
+{
+    for (UI8 i = 0; i < BUTTONMAX; ++i)
+    {
+        prevBtnState[i] = OFF;
+    }
+}
+
+// Function to reset button states after processing
+
+void Button_State_Reset(void)
+{
+    for (UI8 i = 0; i < BUTTONMAX; ++i)
+    {
+        prevBtnState[i] = currBtnState[i];
+        currBtnState[i] = OFF;
+    }
+}
 
 // EXTI callback function called when a button is pressed
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-    if (debounce_state_flag == 1)                                            // Check if debounce is already in progress
+    if (debounce_state_flag == ON)                                            // Check if debounce is already in progress
     {
         return;
     }
     
-    debounce_state_flag = 1;                                                // Set debounce flag to indicate debounce is in progress
+    debounce_state_flag = ON;                                                // Set debounce flag to indicate debounce is in progress
     debounce_pin = GPIO_Pin;                                                // Store the pin number of the button being debounced
     
     __HAL_TIM_SET_COUNTER(&htim3, 0);                                       // Reset the timer counter to 0 and start the timer in interrupt mode to handle debounce timing
@@ -67,7 +82,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
         if (Btn_Input != BUTTONMAX)
         {
-        	UI8 btn_signal = 48 + Btn_Input;
+            currBtnState[Btn_Input] = ON; // Update current button state to pressed
+            UI8 btn_signal = 48 + Btn_Input;
             HAL_UART_Transmit(&huart1, &btn_signal, 1, 100);
         }
     }

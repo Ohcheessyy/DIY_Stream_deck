@@ -43,6 +43,9 @@ extern UART_HandleTypeDef huart1;
 typedef uint8_t UI8;
 typedef uint16_t UI16;
 typedef uint32_t UI32;
+
+#define ON 1
+#define OFF 0
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/
