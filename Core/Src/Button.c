@@ -8,10 +8,15 @@
 #include "main.h"
 #include "Button.h"
 
-UI16 debounce_pin;                                                         // Variable to store the pin number of the button being debounced
-UI8 debounce_state_flag;                                                   // Flag to indicate if debounce is in progress (1) or not (0)
+#define DEBOUNCE_THRESHOLD 5  // Not used anymore, but kept for reference
+
+UI8 debounce_counter[BUTTONMAX];  // Not used, but kept
+UI8 button_state[BUTTONMAX];      // State for each button: IDLE or DEBOUNCING
 UI8 prevBtnState[BUTTONMAX];
 UI8 currBtnState[BUTTONMAX];
+
+UI16 button_pins[BUTTONMAX] = {GPIO_PIN_0, GPIO_PIN_1, GPIO_PIN_2, GPIO_PIN_3, GPIO_PIN_4, GPIO_PIN_5};
+GPIO_TypeDef* button_ports[BUTTONMAX] = {GPIOA, GPIOA, GPIOA, GPIOA, GPIOB, GPIOB};
 
 // Button initialization function to clear previous states before use
 
@@ -20,6 +25,9 @@ void Button_Init(void)
     for (UI8 i = 0; i < BUTTONMAX; ++i)
     {
         prevBtnState[i] = OFF;
+        currBtnState[i] = OFF;
+        debounce_counter[i] = 0;  // Not used
+        button_state[i] = BUTTON_IDLE;
     }
 }
 
@@ -34,55 +42,42 @@ void Button_State_Reset(void)
     }
 }
 
-// EXTI callback function called when a button is pressed
+// Function called to scan button states with TIM3 polling for debouncing
 
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+void Button_Scan(void)
 {
-    if (debounce_state_flag == ON)                                            // Check if debounce is already in progress
+    for (UI8 i = 0; i < BUTTONMAX; ++i)
     {
-        return;
-    }
-    
-    debounce_state_flag = ON;                                                // Set debounce flag to indicate debounce is in progress
-    debounce_pin = GPIO_Pin;                                                // Store the pin number of the button being debounced
-    
-    __HAL_TIM_SET_COUNTER(&htim3, 0);                                       // Reset the timer counter to 0 and start the timer in interrupt mode to handle debounce timing
-    HAL_TIM_Base_Start_IT(&htim3);
-}
-
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
-{
-    HAL_TIM_Base_Stop_IT(htim);                                              // Stop the timer
-
-    UI16 pressed_pin = debounce_pin;
-    debounce_pin = 0;
-    debounce_state_flag = 0;
-
-    GPIO_PinState pin_state;
-    if (pressed_pin == GPIO_PIN_4 || pressed_pin == GPIO_PIN_5)             // Check if the pressed pin is on GPIOB (buttons 4 and 5)
-    {
-        pin_state = HAL_GPIO_ReadPin(GPIOB, pressed_pin);
-    }
-    else
-    {
-        pin_state = HAL_GPIO_ReadPin(GPIOA, pressed_pin);                   // Read the state of the pressed pin from GPIOA (buttons 0-3)
-    }
-
-    if (pin_state == GPIO_PIN_RESET)                                        // active low: pressed
-    {
-        Button_TypeDef Btn_Input = BUTTONMAX;
-        if (pressed_pin == GPIO_PIN_0) Btn_Input = BUTTON0;
-        else if (pressed_pin == GPIO_PIN_1) Btn_Input = BUTTON1;
-        else if (pressed_pin == GPIO_PIN_2) Btn_Input = BUTTON2;
-        else if (pressed_pin == GPIO_PIN_3) Btn_Input = BUTTON3;
-        else if (pressed_pin == GPIO_PIN_4) Btn_Input = BUTTON4;
-        else if (pressed_pin == GPIO_PIN_5) Btn_Input = BUTTON5;
-
-        if (Btn_Input != BUTTONMAX)
+        if (button_state[i] == BUTTON_IDLE)
         {
-            currBtnState[Btn_Input] = ON; // Update current button state to pressed
-            UI8 btn_signal = 48 + Btn_Input;
-            HAL_UART_Transmit(&huart1, &btn_signal, 1, 100);
+            GPIO_PinState pin_state = HAL_GPIO_ReadPin(button_ports[i], button_pins[i]);
+            if (pin_state == GPIO_PIN_RESET)  // Button pressed
+            {
+                // Start debouncing timer
+                __HAL_TIM_SET_COUNTER(&htim3, 0);
+                HAL_TIM_Base_Start(&htim3);
+                button_state[i] = BUTTON_DEBOUNCING;
+            }
+        }
+        else if (button_state[i] == BUTTON_DEBOUNCING)
+        {
+            // Poll the timer
+            if (__HAL_TIM_GET_COUNTER(&htim3) >= htim3.Init.Period)
+            {
+                // Timer expired, check button again
+                HAL_TIM_Base_Stop(&htim3);
+                GPIO_PinState pin_state = HAL_GPIO_ReadPin(button_ports[i], button_pins[i]);
+                if (pin_state == GPIO_PIN_RESET)  // Still pressed
+                {
+                    currBtnState[i] = ON;
+                    UI8 btn_signal = 48 + i;
+                    HAL_UART_Transmit(&huart1, &btn_signal, 1, 100);
+                }
+                button_state[i] = BUTTON_IDLE;
+            }
         }
     }
 }
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{}

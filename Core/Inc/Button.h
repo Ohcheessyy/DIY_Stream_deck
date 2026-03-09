@@ -18,6 +18,7 @@ extern UI8 prevBtnState[BUTTONMAX];
 extern UI8 currBtnState[BUTTONMAX];
 
 void Button_Init(void);
+void Button_Scan(void);
 void Button_State_Reset(void);
 
 #endif /* __BUTTON_H */
