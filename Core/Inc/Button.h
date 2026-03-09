@@ -21,4 +21,8 @@ void Button_Init(void);
 void Button_Scan(void);
 void Button_State_Reset(void);
 
+#define BUTTON_IDLE 0
+#define BUTTON_DEBOUNCING 1
+#define DEBOUNCE_TIME_MS 20  // 20ms debounce time
+
 #endif /* __BUTTON_H */

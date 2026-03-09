@@ -73,6 +73,7 @@ ScreenFunctionTable screen_Table[STATE_SCREEN_COUNT] = {
 };
 
 ScreenState currentState;
+ScreenState prevState = STATE_NO_SCREEN;
 
  // Initialize the state transition system if needed
 void State_Transition_Init(void) {
@@ -82,7 +83,6 @@ void State_Transition_Init(void) {
 void State_Transition_Main(void) {
     
     UI8 event_no;
-    ScreenState prevState = STATE_NO_SCREEN;
     event_no = Judge_State_Transition();
     currentState = Current_State_Table[currentState][event_no];
     if(currentState != prevState) {
@@ -90,6 +90,7 @@ void State_Transition_Main(void) {
     }
     screen_Table[currentState].ActionFunction();
     prevState = currentState;
+    Button_State_Reset();
 }
 
 // Implement logic to determine which event occurred

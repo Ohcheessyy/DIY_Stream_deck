@@ -8,12 +8,11 @@
 #include "main.h"
 #include "Button.h"
 
-#define DEBOUNCE_THRESHOLD 5  // Not used anymore, but kept for reference
 
-UI8 debounce_counter[BUTTONMAX];  // Not used, but kept
 UI8 button_state[BUTTONMAX];      // State for each button: IDLE or DEBOUNCING
 UI8 prevBtnState[BUTTONMAX];
 UI8 currBtnState[BUTTONMAX];
+uint32_t debounce_start[BUTTONMAX];
 
 UI16 button_pins[BUTTONMAX] = {GPIO_PIN_0, GPIO_PIN_1, GPIO_PIN_2, GPIO_PIN_3, GPIO_PIN_4, GPIO_PIN_5};
 GPIO_TypeDef* button_ports[BUTTONMAX] = {GPIOA, GPIOA, GPIOA, GPIOA, GPIOB, GPIOB};
@@ -26,8 +25,8 @@ void Button_Init(void)
     {
         prevBtnState[i] = OFF;
         currBtnState[i] = OFF;
-        debounce_counter[i] = 0;  // Not used
         button_state[i] = BUTTON_IDLE;
+        debounce_start[i] = 0;
     }
 }
 
@@ -37,12 +36,20 @@ void Button_State_Reset(void)
 {
     for (UI8 i = 0; i < BUTTONMAX; ++i)
     {
-        prevBtnState[i] = currBtnState[i];
-        currBtnState[i] = OFF;
+        GPIO_PinState pin_state = HAL_GPIO_ReadPin(button_ports[i], button_pins[i]);
+        if(pin_state == GPIO_PIN_RESET)
+        {
+            prevBtnState[i] = currBtnState[i];
+        }
+        else
+        {
+            prevBtnState[i] = currBtnState[i];
+            currBtnState[i] = OFF;
+        }
     }
 }
 
-// Function called to scan button states with TIM3 polling for debouncing
+// Function called to scan button states with HAL_GetTick for debouncing
 
 void Button_Scan(void)
 {
@@ -53,19 +60,17 @@ void Button_Scan(void)
             GPIO_PinState pin_state = HAL_GPIO_ReadPin(button_ports[i], button_pins[i]);
             if (pin_state == GPIO_PIN_RESET)  // Button pressed
             {
-                // Start debouncing timer
-                __HAL_TIM_SET_COUNTER(&htim3, 0);
-                HAL_TIM_Base_Start(&htim3);
+                // Start debouncing timer using HAL_GetTick
+                debounce_start[i] = HAL_GetTick();
                 button_state[i] = BUTTON_DEBOUNCING;
             }
         }
         else if (button_state[i] == BUTTON_DEBOUNCING)
         {
-            // Poll the timer
-            if (__HAL_TIM_GET_COUNTER(&htim3) >= htim3.Init.Period)
+            // Check if debounce time has passed
+            if (HAL_GetTick() - debounce_start[i] >= DEBOUNCE_TIME_MS)
             {
                 // Timer expired, check button again
-                HAL_TIM_Base_Stop(&htim3);
                 GPIO_PinState pin_state = HAL_GPIO_ReadPin(button_ports[i], button_pins[i]);
                 if (pin_state == GPIO_PIN_RESET)  // Still pressed
                 {

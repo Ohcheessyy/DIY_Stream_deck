@@ -117,7 +117,6 @@ int main(void)
     /* USER CODE BEGIN 3 */
     Button_Scan();  /* scan button states and set debounce if needed */
     State_Transition_Main();
-    Button_State_Reset();  /* reset button states after processing */
   }
   /* USER CODE END 3 */
 }
