@@ -73,6 +73,7 @@ ScreenFunctionTable screen_Table[STATE_SCREEN_COUNT] = {
 };
 
 ScreenState currentState;
+ScreenState previousState = STATE_NO_SCREEN;
 
  // Initialize the state transition system if needed
 void State_Transition_Init(void) {
@@ -85,7 +86,12 @@ void State_Transition_Main(void) {
 
     event_no = Judge_State_Transition();
     currentState = Current_State_Table[currentState][event_no];
+    if(currentState != previousState) {
+        screen_Table[previousState].ExitFunction();
+    }
     screen_Table[currentState].ActionFunction();
+    previousState = currentState;
+    Button_State_Reset();  /* reset button states after processing */
     
 }
 
@@ -149,6 +155,8 @@ void Screen1_Action(void) {
 
 void Screen1_Exit(void) {
     // Implement the exit action for Screen 1
+    ssd1306_Fill(Black);
+    ssd1306_UpdateScreen(CS_PIN_0);
 }
 
 void Screen2_Entry(void) {
@@ -163,6 +171,8 @@ void Screen2_Action(void) {
 
 void Screen2_Exit(void) {
     // Implement the exit action for Screen 2
+    ssd1306_Fill(Black);
+    ssd1306_UpdateScreen(CS_PIN_1);
 }
 
 void Screen3_Entry(void) {
@@ -177,4 +187,6 @@ void Screen3_Action(void) {
 
 void Screen3_Exit(void) {
     // Implement the exit action for Screen 3
+    ssd1306_Fill(Black);
+    ssd1306_UpdateScreen(CS_PIN_2);
 }

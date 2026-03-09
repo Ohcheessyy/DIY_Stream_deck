@@ -115,7 +115,6 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     State_Transition_Main();
-    Button_State_Reset();  /* reset button states after processing */
   }
   /* USER CODE END 3 */
 }

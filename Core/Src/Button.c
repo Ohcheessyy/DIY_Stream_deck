@@ -13,6 +13,8 @@ UI8 debounce_state_flag;                                                   // Fl
 UI8 prevBtnState[BUTTONMAX];
 UI8 currBtnState[BUTTONMAX];
 
+GPIO_TypeDef* BtnPort[BUTTONMAX] = {GPIOA, GPIOA, GPIOA, GPIOA, GPIOB, GPIOB}; // Pointers to the GPIO ports for each button
+UI16 BtnPin[BUTTONMAX] = {GPIO_PIN_0, GPIO_PIN_1, GPIO_PIN_2, GPIO_PIN_3, GPIO_PIN_4, GPIO_PIN_5}; // Pin numbers for each button
 // Button initialization function to clear previous states before use
 
 void Button_Init(void)
@@ -29,8 +31,16 @@ void Button_State_Reset(void)
 {
     for (UI8 i = 0; i < BUTTONMAX; ++i)
     {
-        prevBtnState[i] = currBtnState[i];
-        currBtnState[i] = OFF;
+        GPIO_PinState pin_state = HAL_GPIO_ReadPin(BtnPort[i], BtnPin[i]);
+        if (pin_state == GPIO_PIN_RESET) // active low: pressed
+        {
+            prevBtnState[i] = currBtnState[i];
+        }
+        else
+        {
+            prevBtnState[i] = currBtnState[i];
+            currBtnState[i] = OFF;
+        }
     }
 }
 
