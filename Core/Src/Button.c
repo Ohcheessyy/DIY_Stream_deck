@@ -7,6 +7,7 @@
 
 #include "main.h"
 #include "Button.h"
+#include "Display_control.h"
 
 UI16 debounce_pin;                                                         // Variable to store the pin number of the button being debounced
 UI8 debounce_state_flag;                                                   // Flag to indicate if debounce is in progress (1) or not (0)
@@ -31,14 +32,10 @@ void Button_State_Reset(void)
 {
     for (UI8 i = 0; i < BUTTONMAX; ++i)
     {
+        prevBtnState[i] = currBtnState[i];
         GPIO_PinState pin_state = HAL_GPIO_ReadPin(BtnPort[i], BtnPin[i]);
-        if (pin_state == GPIO_PIN_RESET) // active low: pressed
+        if (pin_state != GPIO_PIN_RESET)
         {
-            prevBtnState[i] = currBtnState[i];
-        }
-        else
-        {
-            prevBtnState[i] = currBtnState[i];
             currBtnState[i] = OFF;
         }
     }
@@ -93,6 +90,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
             currBtnState[Btn_Input] = ON; // Update current button state to pressed
             UI8 btn_signal = 48 + Btn_Input;
             HAL_UART_Transmit(&huart1, &btn_signal, 1, 100);
+            Judge_State_Transition();
         }
     }
 }

@@ -11,7 +11,7 @@
 #include "main.h"
 
 void State_Transition_Init(void);
-void State_Transition_Main(void);
+void Judge_State_Transition(void);
 
 
 #endif /* INC_DISPLAY_CONTROL_H_ */

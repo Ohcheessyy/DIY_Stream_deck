@@ -103,8 +103,8 @@ int main(void)
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
   OLED_Init();
-  Button_Init();              /* clear previous states before use */
-  State_Transition_Init();  /* Initialize the state transition system if needed */
+  Button_Init();
+  State_Transition_Init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -114,7 +114,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    State_Transition_Main();
+    Button_State_Reset();
   }
   /* USER CODE END 3 */
 }
