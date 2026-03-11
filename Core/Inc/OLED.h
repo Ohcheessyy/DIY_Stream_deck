@@ -21,5 +21,6 @@ typedef enum{
 
 void OLED_Init(void);
 void OLED_Main(void);
+void DrawBitMap(void);
 
 #endif /* INC_OLED_H_ */

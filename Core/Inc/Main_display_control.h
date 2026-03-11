@@ -1,5 +1,5 @@
 /*
- * Display_control.h
+ * Main_display_control.h
  *
  *  Created on: Feb 22, 2026
  *      Author: Ohcheessyy

@@ -1,5 +1,5 @@
 /*
- * Display_control.c
+ * Main_display_control.c
  *
  *  Created on: Feb 22, 2026
  *      Author: Ohcheessyy
@@ -57,6 +57,20 @@ EventJudgeFunction Event_Judge_Functions[STATE_SCREEN_COUNT][EVENT_COUNT] = {
 
 typedef void (*ScreenFunction)(void);
 
+ScreenFunction Main_Screen_EntryFunctions[STATE_SCREEN_COUNT] = {
+    &dummy_void_function, // STATE_NO_SCREEN
+    &Screen1_Entry, // STATE_SCREEN_1
+    &Screen2_Entry, // STATE_SCREEN_2
+    &Screen3_Entry  // STATE_SCREEN_3
+};
+
+ScreenFunction Main_Screen_ExitFunctions[STATE_SCREEN_COUNT] = {
+    &dummy_void_function, // STATE_NO_SCREEN
+    &Screen1_Exit, // STATE_SCREEN_1
+    &Screen2_Exit, // STATE_SCREEN_2
+    &Screen3_Exit  // STATE_SCREEN_3
+};
+
 typedef struct {
     ScreenFunction EntryFunction;
     ScreenFunction ExitFunction;
@@ -97,10 +111,10 @@ void Judge_State_Transition(void) {
     currentState = Current_State_Table[currentState][event_no];
 
     if(currentState != previousState) {
-        screen_Table[previousState].ExitFunction();
+        Main_Screen_ExitFunctions[previousState]();
     }
 
-    screen_Table[currentState].EntryFunction();
+    Main_Screen_EntryFunctions[currentState]();
     
     previousState = currentState;
 
@@ -138,8 +152,7 @@ UI8 dummy_UI8_function(void)
 
 void Screen1_Entry(void) {
     // Implement the entry action for Screen 1
-    ssd1306_Fill(White);
-    ssd1306_UpdateScreen(CS_PIN_0);
+    DrawBitMap();
 }
 
 void Screen1_Exit(void) {
