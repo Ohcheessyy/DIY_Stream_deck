@@ -20,7 +20,7 @@
 #include "main.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "Display_control.h"
+#include "Main_display_control.h"
 #include "Button.h"
 #include "OLED.h"
 /* USER CODE END Includes */

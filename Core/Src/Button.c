@@ -7,7 +7,7 @@
 
 #include "main.h"
 #include "Button.h"
-#include "Display_control.h"
+#include "Main_display_control.h"
 
 UI16 debounce_pin;                                                         // Variable to store the pin number of the button being debounced
 UI8 debounce_state_flag;                                                   // Flag to indicate if debounce is in progress (1) or not (0)

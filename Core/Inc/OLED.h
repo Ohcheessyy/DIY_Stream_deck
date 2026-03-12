@@ -9,6 +9,7 @@
 #define INC_OLED_H_
 
 #include "main.h"
+#include "Main_display_control.h"
 
 typedef enum{
     CS_PIN_0 = GPIO_PIN_0,
@@ -21,6 +22,6 @@ typedef enum{
 
 void OLED_Init(void);
 void OLED_Main(void);
-void DrawBitMap(void);
+void DrawBitMap(ScreenState state);
 
 #endif /* INC_OLED_H_ */

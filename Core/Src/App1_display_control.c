@@ -5,4 +5,8 @@
  *      Author: Ohcheessyy
  */
 
+#include "main.h"
+#include "Main_display_control.h"
 
+void dummy_void_function(void);
+UI8 dummy_UI8_function(void);
