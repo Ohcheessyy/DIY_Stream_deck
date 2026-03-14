@@ -104,7 +104,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   OLED_Init();
   Button_Init();
-  State_Transition_Init();
+  State_Trans_Init();
   /* USER CODE END 2 */
 
   /* Infinite loop */

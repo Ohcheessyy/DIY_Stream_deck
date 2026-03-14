@@ -4,38 +4,43 @@
  *  Created on: Feb 22, 2026
  *      Author: Ohcheessyy
  */
-#include "main.h"
+
 #include "Main_display_control.h"
+#include "main.h"
 #include "Button.h"
 #include "OLED.h"
 #include "ssd1306.h"
+#include "App_display_control.h"
+#include "Image_bit_map.h"
 
-void dummy_void_function(void);
-UI8 dummy_UI8_function(void);
+void dummy_void_func(void);
+UI8 dummy_UI8_func(void);
 void Screen1_Entry(void);
 void Screen1_Exit(void);
 void Screen2_Entry(void);
 void Screen2_Exit(void);
 void Screen3_Entry(void);
 void Screen3_Exit(void);
-UI8 Judge_Button_0(void);
-UI8 Judge_Button_1(void);
-UI8 Judge_Button_2(void);
-UI8 Judge_Button_3(void);
-UI8 Judge_Button_4(void);
-UI8 Judge_Button_5(void);
-void State_Transition_Init(void);
-void Judge_State_Transition(void);
+UI8 Jdg_Btn_0(void);
+UI8 Jdg_Btn_1(void);
+UI8 Jdg_Btn_2(void);
+UI8 Jdg_Btn_3(void);
+UI8 Jdg_Btn_4(void);
+UI8 Jdg_Btn_5(void);
+void State_Trans_Init(void);
+void Jdg_Transition(void);
+void Scrn_Operation(void);
 
 //State change table for main 3 screens
-ScreenState Current_State_Table[STATE_SCREEN_COUNT][SCREEN_EVENT_COUNT] = {
+ScreenState MScrn_State_Table[STATE_SCREEN_COUNT][SCREEN_EVENT_COUNT] = {
     {STATE_NO_SCREEN, STATE_NO_SCREEN, STATE_NO_SCREEN}, // From Init
     {STATE_SCREEN_1, STATE_SCREEN_3, STATE_SCREEN_2}, // From STATE_SCREEN_1
     {STATE_SCREEN_2, STATE_SCREEN_1, STATE_SCREEN_3}, // From STATE_SCREEN_2
     {STATE_SCREEN_3, STATE_SCREEN_2, STATE_SCREEN_1} // From STATE_SCREEN_3
 };
 
-AppState Current_App_Array[APP_EVENT_COUNT] = {
+//Array for which application have been choosen
+AppState App_Array[APP_EVENT_COUNT] = {
     STATE_NO_APP, // From APP_EVENT_NONE
     STATE_APP_1, // From APP_EVENT_BUTTON_0
     STATE_APP_2, // From APP_EVENT_BUTTON_1
@@ -43,59 +48,36 @@ AppState Current_App_Array[APP_EVENT_COUNT] = {
     STATE_APP_4  // From APP_EVENT_BUTTON_3
 };
 
-typedef UI8 (*EventJudgeFunction)(void);
-
 // Event judge for 3 main screens
-EventJudgeFunction Event_Judge_Functions[STATE_SCREEN_COUNT][SCREEN_EVENT_COUNT] = {
-    {&dummy_UI8_function, &dummy_UI8_function, &dummy_UI8_function}, // From Init
-    {&dummy_UI8_function, &Judge_Button_3, &Judge_Button_5}, // From STATE_SCREEN_1
-    {&dummy_UI8_function, &Judge_Button_3, &Judge_Button_5}, // From STATE_SCREEN_2
-    {&dummy_UI8_function, &Judge_Button_3, &Judge_Button_5}  // From STATE_SCREEN_3
+EventJudgeFunction MScrn_Event_Jdg_Func[STATE_SCREEN_COUNT][SCREEN_EVENT_COUNT] = {
+    {&dummy_UI8_func, &dummy_UI8_func, &dummy_UI8_func}, // From Init
+    {&dummy_UI8_func, &Jdg_Btn_3, &Jdg_Btn_5}, // From STATE_SCREEN_1
+    {&dummy_UI8_func, &Jdg_Btn_3, &Jdg_Btn_5}, // From STATE_SCREEN_2
+    {&dummy_UI8_func, &Jdg_Btn_3, &Jdg_Btn_5}  // From STATE_SCREEN_3
 };
 
 // Event judge for 4 apps
-EventJudgeFunction App_Event_Judge_Functions[APP_EVENT_COUNT] = {
-    &dummy_UI8_function, // From APP_EVENT_NONE
-    &Judge_Button_0, // From APP_EVENT_BUTTON_0
-    &Judge_Button_1, // From APP_EVENT_BUTTON_1
-    &Judge_Button_2, // From APP_EVENT_BUTTON_2
-    &Judge_Button_4  // From APP_EVENT_BUTTON_3
+EventJudgeFunction App_Event_Jdg_Func[APP_EVENT_COUNT] = {
+    &dummy_UI8_func, // From APP_EVENT_NONE
+    &Jdg_Btn_0, // From APP_EVENT_BUTTON_0
+    &Jdg_Btn_1, // From APP_EVENT_BUTTON_1
+    &Jdg_Btn_2, // From APP_EVENT_BUTTON_2
+    &Jdg_Btn_4  // From APP_EVENT_BUTTON_3
 };
 
-typedef void (*ScreenFunction)(void);
-
-ScreenFunction Main_Screen_EntryFunctions[STATE_SCREEN_COUNT] = {
-    &dummy_void_function, // STATE_NO_SCREEN
+ScreenFunction Main_Scrn_EntryFunc[STATE_SCREEN_COUNT] = {
+    &dummy_void_func, // STATE_NO_SCREEN
     &Screen1_Entry, // STATE_SCREEN_1
     &Screen2_Entry, // STATE_SCREEN_2
     &Screen3_Entry  // STATE_SCREEN_3
 };
 
-ScreenFunction Main_Screen_ExitFunctions[STATE_SCREEN_COUNT] = {
-    &dummy_void_function, // STATE_NO_SCREEN
+ScreenFunction Main_Scrn_ExitFunc[STATE_SCREEN_COUNT] = {
+    &dummy_void_func, // STATE_NO_SCREEN
     &Screen1_Exit, // STATE_SCREEN_1
     &Screen2_Exit, // STATE_SCREEN_2
     &Screen3_Exit  // STATE_SCREEN_3
 };
-
-typedef void (*AppFunction)(void);
-
-AppFunction Main_App_EntryFunctions[STATE_APP_COUNT] = {
-    &dummy_void_function, // STATE_NO_APP
-    &dummy_void_function, // STATE_APP_1
-    &dummy_void_function, // STATE_APP_2
-    &dummy_void_function, // STATE_APP_3
-    &dummy_void_function  // STATE_APP_4
-};
-
-AppFunction Main_App_ExitFunctions[STATE_APP_COUNT] = {
-    &dummy_void_function, // STATE_NO_APP
-    &dummy_void_function, // STATE_APP_1
-    &dummy_void_function, // STATE_APP_2
-    &dummy_void_function, // STATE_APP_3
-    &dummy_void_function  // STATE_APP_4
-};
-
 
 //Deploy this later
 // typedef struct {
@@ -104,82 +86,103 @@ AppFunction Main_App_ExitFunctions[STATE_APP_COUNT] = {
 // } ScreenFunctionTable;
 
 // ScreenFunctionTable screen_Table[STATE_SCREEN_COUNT] = {
-//     {&dummy_void_function, &dummy_void_function}, // STATE_NO_SCREEN
+//     {&dummy_void_func, &dummy_void_func}, // STATE_NO_SCREEN
 //     {&Screen1_Entry, &Screen1_Exit}, // STATE_SCREEN_1
 //     {&Screen2_Entry, &Screen2_Exit}, // STATE_SCREEN_2
 //     {&Screen3_Entry, &Screen3_Exit}  // STATE_SCREEN_3
 // };
-
-ScreenState currentScreenState;
-ScreenState previousScreenState;
-AppState currentAppState;
-AppState previousAppState;
+Mode currScrMode;
+Mode prevScrMode;
+ScreenState currScrState;
+ScreenState prevScrState;
+AppState currAppState;
+AppState prevAppState;
+AppScreenState currAScrState;
+AppScreenState prevAScrState;
 
  // Initialize the state transition system if needed
-void State_Transition_Init(void) {
-    currentScreenState = STATE_SCREEN_1;
-    previousScreenState = STATE_SCREEN_1;
-    currentAppState = STATE_NO_APP;
-    previousAppState = STATE_NO_APP;
-    Main_Screen_EntryFunctions[currentScreenState]();
+void State_Trans_Init(void) {
+    currScrMode = MODE_CHOOSE_APP;
+    prevScrMode = MODE_CHOOSE_APP;
+    currScrState = STATE_SCREEN_1;
+    prevScrState = STATE_SCREEN_1;
+    currAppState = STATE_NO_APP;
+    prevAppState = STATE_NO_APP;
+    currAScrState = APP_STATE_SCREEN_1;
+    prevAScrState = APP_STATE_SCREEN_1;
+    Main_Scrn_EntryFunc[currScrState]();
 }
 
 // Implement logic to determine which event occurred
-void Judge_State_Transition(void) {
+void Jdg_State_Transition(void) {
 
     UI8 event_Screen = SCREEN_EVENT_NONE;
     UI8 event_App = APP_EVENT_NONE;
-    UI8 result = 0;
-    
-    // Check each event for the main application state
-    for (int i = 0; i < APP_EVENT_COUNT; i++) {
-        if (event_App == APP_EVENT_NONE) {
-            result = App_Event_Judge_Functions[i]();
-            if (result == 1) {
-                event_App = i;
+    UI8 result_Screen = OFF;
+    UI8 result_App = OFF;
+
+    if(currScrMode == MODE_CHOOSE_APP) {                                       // Judge condition if no Application is selected         
+        
+        for (int i = 0; i < APP_EVENT_COUNT; i++) {                             // Check each event for the main application state
+            if (event_App == APP_EVENT_NONE) {
+                result_App = App_Event_Jdg_Func[i]();
+                if (result_App == ON) {
+                    event_App = i;
+                }
             }
         }
-    }
+        if(event_App != APP_EVENT_NONE){
+            currAppState = App_Array[event_App];                                //Update current Applcation State
+            currScrMode = MODE_CHOOSE_FCTN;
+        }                                       
 
-    currentAppState = Current_App_Array[event_App];
-
-    // Implement application state transition logic here if needed
-    if(currentAppState != previousAppState) {
-        Main_App_EntryFunctions[previousAppState]();
-    }
-    
-    Main_App_EntryFunctions[currentAppState]();
-    
-    previousAppState = currentAppState;
-
-    // Judge condition if no Application is selected
-
-    if(currentAppState == STATE_NO_APP) {
-       
-        // Check each event for the main screen state
-        for (int i = 0; i < SCREEN_EVENT_COUNT; i++) {
+        for (int i = 0; i < SCREEN_EVENT_COUNT; i++) {                      // Check each event for the main screen state
             if (event_Screen == SCREEN_EVENT_NONE) {
-                result = Event_Judge_Functions[currentScreenState][i]();
-                if (result == 1) {
+                result_Screen = MScrn_Event_Jdg_Func[currScrState][i]();
+                if (result_Screen == ON) {
                     event_Screen = i;
                 }
             }
         }
         
-        currentScreenState = Current_State_Table[currentScreenState][event_Screen];
+        currScrState = MScrn_State_Table[currScrState][event_Screen];       //Update current Screen State
+    }
+    else {
+        Jdg_App_State_Transition(&currAScrState, &prevAScrState);
+        Jdg_Fctn_Event();
+    }
 
-        if(currentScreenState != previousScreenState) {
-            Main_Screen_ExitFunctions[previousScreenState]();
+    Scrn_Operation();
+
+    if(currScrMode == MODE_CHOOSE_APP){
+        if(event_App != APP_EVENT_NONE){
+            prevAppState = currAppState;
         }
-
-        Main_Screen_EntryFunctions[currentScreenState]();
-    
-        previousScreenState = currentScreenState;
+        prevScrState = currScrState;
     }
 }
 
+void Scrn_Operation(void){
+
+
+    if(currScrMode == MODE_CHOOSE_APP){
+        
+        if(currScrState != prevScrState){
+            Main_Scrn_ExitFunc[prevScrState]();
+        }
+
+        Main_Scrn_EntryFunc[currScrState]();
+    }
+    else
+    {
+        AppScrn_EntryFctn_IF();
+    }
+
+}
+
+
 // Implement logic to check if the button 0 was pressed
-UI8 Judge_Button_0(void) {
+UI8 Jdg_Btn_0(void) {
     
     if(prevBtnState[BUTTON0] == OFF && currBtnState[BUTTON0] == ON)
     {
@@ -189,7 +192,7 @@ UI8 Judge_Button_0(void) {
 }
 
 // Implement logic to check if the left button was pressed
-UI8 Judge_Button_1(void) {
+UI8 Jdg_Btn_1(void) {
     
     if(prevBtnState[BUTTON1] == OFF && currBtnState[BUTTON1] == ON)
     {
@@ -199,7 +202,7 @@ UI8 Judge_Button_1(void) {
 }
 
 // Implement logic to check if the left button was pressed
-UI8 Judge_Button_2(void) {
+UI8 Jdg_Btn_2(void) {
     
     if(prevBtnState[BUTTON2] == OFF && currBtnState[BUTTON2] == ON)
     {
@@ -209,7 +212,7 @@ UI8 Judge_Button_2(void) {
 }
 
 // Implement logic to check if the left button was pressed
-UI8 Judge_Button_3(void) {
+UI8 Jdg_Btn_3(void) {
     
     if(prevBtnState[BUTTON3] == OFF && currBtnState[BUTTON3] == ON)
     {
@@ -219,7 +222,7 @@ UI8 Judge_Button_3(void) {
 }
 
 // Implement logic to check if the left button was pressed
-UI8 Judge_Button_4(void) {
+UI8 Jdg_Btn_4(void) {
     
     if(prevBtnState[BUTTON4] == OFF && currBtnState[BUTTON4] == ON)
     {
@@ -229,7 +232,7 @@ UI8 Judge_Button_4(void) {
 }
 
 // Implement logic to check if the right button was pressed
-UI8 Judge_Button_5(void) {
+UI8 Jdg_Btn_5(void) {
     
     if(prevBtnState[BUTTON5] == OFF && currBtnState[BUTTON5] == ON)
     {
@@ -238,11 +241,11 @@ UI8 Judge_Button_5(void) {
     return OFF;
 }
 
-void dummy_void_function(void) {
+void dummy_void_func(void) {
     // This function is intentionally left empty to prevent linker errors
 }
 
-UI8 dummy_UI8_function(void)
+UI8 dummy_UI8_func(void)
 {
     // This function is intentionally left empty to prevent linker errors
     return OFF;
@@ -250,7 +253,7 @@ UI8 dummy_UI8_function(void)
 
 void Screen1_Entry(void) {
     // Implement the entry action for Screen 1
-    DrawBitMap(currentScreenState);
+    DrawBitMap(currScrState);
 }
 
 void Screen1_Exit(void) {
@@ -261,7 +264,7 @@ void Screen1_Exit(void) {
 
 void Screen2_Entry(void) {
     // Implement the entry action for Screen 2
-    DrawBitMap(currentScreenState);
+    DrawBitMap(currScrState);
 }
 
 void Screen2_Exit(void) {
@@ -272,7 +275,7 @@ void Screen2_Exit(void) {
 
 void Screen3_Entry(void) {
     // Implement the entry action for Screen 3
-    DrawBitMap(currentScreenState);
+    DrawBitMap(currScrState);
 }
 
 void Screen3_Exit(void) {

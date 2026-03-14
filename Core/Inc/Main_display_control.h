@@ -9,6 +9,13 @@
 #define INC_DISPLAY_CONTROL_H_
 
 #include "main.h"
+#include "App_display_control.h"
+
+typedef enum {
+    MODE_NONE = 0,
+    MODE_CHOOSE_APP,
+    MODE_CHOOSE_FCTN
+} Mode;
 
 // Event when changeing screen
 typedef enum {
@@ -47,8 +54,28 @@ typedef enum {
     STATE_APP_COUNT
 } AppState;
 
-void State_Transition_Init(void);
-void Judge_State_Transition(void);
+typedef UI8 (*EventJudgeFunction)(void);
+typedef void (*ScreenFunction)(void);
+typedef void (*AppFunction)(void);
 
+extern Mode currScrMode;
+extern Mode prevScrMode;
+extern ScreenState currScrState;
+extern ScreenState prevScnState;
+extern AppState currAppState;
+extern AppState prevAppState;
+extern AppScreenState currAScrState;
+extern AppScreenState prevAScnState;
+
+void dummy_void_func(void);
+UI8 dummy_UI8_func(void);
+void State_Trans_Init(void);
+void Jdg_State_Transition(void);
+UI8 Jdg_Btn_0(void);
+UI8 Jdg_Btn_1(void);
+UI8 Jdg_Btn_2(void);
+UI8 Jdg_Btn_3(void);
+UI8 Jdg_Btn_4(void);
+UI8 Jdg_Btn_5(void);
 
 #endif /* INC_DISPLAY_CONTROL_H_ */

@@ -5,8 +5,8 @@
  *      Author: Ohcheessyy
  */
 
-#include "main.h"
 #include "Button.h"
+#include "main.h"
 #include "Main_display_control.h"
 
 UI16 debounce_pin;                                                         // Variable to store the pin number of the button being debounced
@@ -90,7 +90,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
             currBtnState[Btn_Input] = ON; // Update current button state to pressed
             UI8 btn_signal = 48 + Btn_Input;
             HAL_UART_Transmit(&huart1, &btn_signal, 1, 100);
-            Judge_State_Transition();
+            Jdg_State_Transition();
         }
     }
 }
