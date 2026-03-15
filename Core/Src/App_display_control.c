@@ -18,7 +18,8 @@ void AppScrn1_Entry(void);
 void AppScrn2_Entry(void);
 void AppScrn1_Exit(void);
 void AppScrn2_Exit(void);
-void AppScrn_Operation(AppScreenState currState, AppScreenState prevState);
+void AppScrn_Operation(AppScreenState *currState, AppScreenState *prevState);
+void Update_AppScrn_State(AppScreenState *currState, AppScreenState *prevState);
 
 //State change table for main 3 screens
 AppScreenState AppScrn_State_Table[APP_STATE_SCREEN_COUNT][APP_SCREEN_EVENT_COUNT] = {
@@ -77,8 +78,6 @@ void Jdg_App_State_Transition(AppScreenState *currState, AppScreenState *prevSta
     }
 
     *currState = AppScrn_State_Table[*currState][event_AppScrn];
-    AppScrn_Operation(*currState, *prevState);
-    *prevState = *currState;
 
 }
 
@@ -100,13 +99,17 @@ void Jdg_Fctn_Event(void)
 
 }
 
-void AppScrn_Operation(AppScreenState currState, AppScreenState prevState){
+void AppScrn_Operation(AppScreenState *currState, AppScreenState *prevState){
     
-    if(currState != prevState) {
-        AppScrn_ExitFunc[prevState]();
+    AppScrn_ExitFunc[*prevState]();
+    AppScrn_EntryFunc[*currState]();
+}
+
+void Update_AppScrn_State(AppScreenState *currState, AppScreenState *prevState){
+    
+    if(*currState != *prevState){
+        *prevState = *currState;
     }
-    
-    AppScrn_EntryFunc[currState]();
 }
 
 void Btn0_Fctn(void)
@@ -130,14 +133,12 @@ void AppScrn2_Entry(void)
 
 void AppScrn1_Exit(void)
 {
-    ssd1306_Fill(Black);
-    ssd1306_UpdateScreen(CS_PIN_0);
+    ClearScreen();
 }
 
 void AppScrn2_Exit(void)
 {
-    ssd1306_Fill(Black);
-    ssd1306_UpdateScreen(CS_PIN_1);
+    ClearScreen();
 }
 
 void AppScrn_EntryFctn_IF()

@@ -69,8 +69,9 @@ extern AppScreenState prevAScnState;
 
 void dummy_void_func(void);
 UI8 dummy_UI8_func(void);
+void Main_Operation(void);
 void State_Trans_Init(void);
-void Jdg_State_Transition(void);
+void Jdg_Scrn_State_Trans(void);
 UI8 Jdg_Btn_0(void);
 UI8 Jdg_Btn_1(void);
 UI8 Jdg_Btn_2(void);

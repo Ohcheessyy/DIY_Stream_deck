@@ -21,7 +21,7 @@ typedef enum{
 }CS_PIN_TypeDef;
 
 void OLED_Init(void);
-void OLED_Main(void);
-void DrawBitMap(ScreenState state);
+void DrawScreenState(ScreenState state);
+void ClearScreen(void);
 
 #endif /* INC_OLED_H_ */

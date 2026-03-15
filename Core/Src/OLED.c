@@ -15,7 +15,8 @@ CS_PIN_TypeDef CS_PIN_ARRAY[6] = {CS_PIN_0, CS_PIN_1, CS_PIN_2, CS_PIN_3, CS_PIN
 UI8 flag = 0;
 
 void OLED_Init(void);
-void OLED_Main(void);
+void DrawScreenState(ScreenState state);
+void ClearScreen(void);
 
 // Reset and initialize all OLED displays
 void OLED_Init(void) {
@@ -28,43 +29,61 @@ void OLED_Init(void) {
     }
 }
 
-void OLED_Main(void) {
-    if(flag == 0){
-        ssd1306_Fill(White);
-        for (int i = 0; i < 6; i++) {
-            ssd1306_UpdateScreen(CS_PIN_ARRAY[i]);
-        }
-        flag = 1;
-    }
-    else{
-        ssd1306_Fill(Black);
-        for (int i = 0; i < 6; i++) {
-            ssd1306_UpdateScreen(CS_PIN_ARRAY[i]);
-        }
-        flag = 0;
-    }
-    HAL_Delay(1000);
-}
-
-void DrawBitMap(ScreenState state)
+void DrawScreenState(ScreenState state)
 {
     switch(state) {
         case STATE_SCREEN_1:
-        ssd1306_Fill(White);
-        ssd1306_DrawBitmap(0,0,bitmap_discord,128,64,Black);
+        ssd1306_Fill(Black);
+        ssd1306_DrawBitmap(0,0,bitmap_discord,128,64,White);
         ssd1306_UpdateScreen(CS_PIN_0);
+        
+        ssd1306_Fill(Black);
+        ssd1306_DrawBitmap(0,0,bitmap_youtube,128,64,White);
+        ssd1306_UpdateScreen(CS_PIN_1); 
+
+        ssd1306_Fill(Black);
+        ssd1306_DrawBitmap(0,0,bitmap_obs,128,64,White);
+        ssd1306_UpdateScreen(CS_PIN_2);
+        
+        ssd1306_Fill(Black);
+        ssd1306_DrawBitmap(0,0,bitmap_steam,128,64,White);
+        ssd1306_UpdateScreen(CS_PIN_4);
+
+        ssd1306_Fill(Black);
+        ssd1306_DrawBitmap(0,0,bitmap_left_arrow,128,64,White);
+        ssd1306_UpdateScreen(CS_PIN_3);
+
+        ssd1306_Fill(Black);
+        ssd1306_DrawBitmap(0,0,bitmap_right_arrow,128,64,White);
+        ssd1306_UpdateScreen(CS_PIN_5);
+        
         break;
 
         case STATE_SCREEN_2:
         ssd1306_Fill(White);
-        ssd1306_DrawBitmap(0,0,bitmap_youtube,128,64,Black);
         ssd1306_UpdateScreen(CS_PIN_1);    
+
+        ssd1306_Fill(Black);
+        ssd1306_DrawBitmap(0,0,bitmap_left_arrow,128,64,White);
+        ssd1306_UpdateScreen(CS_PIN_3);
+
+        ssd1306_Fill(Black);
+        ssd1306_DrawBitmap(0,0,bitmap_right_arrow,128,64,White);
+        ssd1306_UpdateScreen(CS_PIN_5);
         break;
 
         case STATE_SCREEN_3:
         ssd1306_Fill(White);
-        ssd1306_DrawBitmap(0,0,bitmap_obs,128,64,Black);
         ssd1306_UpdateScreen(CS_PIN_2);    
+        
+        ssd1306_Fill(Black);
+        ssd1306_DrawBitmap(0,0,bitmap_left_arrow,128,64,White);
+        ssd1306_UpdateScreen(CS_PIN_3);
+
+        ssd1306_Fill(Black);
+        ssd1306_DrawBitmap(0,0,bitmap_right_arrow,128,64,White);
+        ssd1306_UpdateScreen(CS_PIN_5);
+
         break;
 		
 		default:
@@ -73,3 +92,10 @@ void DrawBitMap(ScreenState state)
     
 }
 
+void ClearScreen(void)
+{
+    for(int i = 0; i < 6; i++){
+        ssd1306_Fill(Black);
+        ssd1306_UpdateScreen(CS_PIN_ARRAY[i]);
+    }
+}

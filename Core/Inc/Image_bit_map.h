@@ -11,7 +11,13 @@ extern const unsigned char bitmap_discord [];
 extern const unsigned char bitmap_youtube [];
 // 'obs', 128x64px
 extern const unsigned char bitmap_obs [];
+// 'steam', 128x64px
+extern const unsigned char bitmap_steam [];
 // 'go-back-arrow', 128x64px
 extern const unsigned char bitmap_go_back_arrow [];
 // 'microphone-black-shape', 128x64px
 extern const unsigned char bitmap_microphone_black_shape [];
+// 'left-arrow', 128x64px
+extern const unsigned char bitmap_left_arrow [];
+// 'right-arrow', 128x64px
+extern const unsigned char bitmap_right_arrow [];

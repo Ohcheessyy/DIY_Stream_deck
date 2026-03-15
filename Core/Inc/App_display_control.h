@@ -36,5 +36,7 @@ void Jdg_App_State_Transition(AppScreenState *currState, AppScreenState *prevSta
 void AppScrn1_Entry(void);
 void AppScrn_EntryFctn_IF();
 void Jdg_Fctn_Event(void);
+void AppScrn_Operation(AppScreenState *currState, AppScreenState *prevState);
+void Update_AppScrn_State(AppScreenState *currState, AppScreenState *prevState);
 
 #endif /* INC_APP1_DISPLAY_CONTROL_H_ */

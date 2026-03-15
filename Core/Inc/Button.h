@@ -19,5 +19,6 @@ extern UI8 currBtnState[BUTTONMAX];
 
 void Button_Init(void);
 void Button_State_Reset(void);
+void ClearScreen(void);
 
 #endif /* __BUTTON_H */

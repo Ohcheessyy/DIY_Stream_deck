@@ -90,7 +90,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
             currBtnState[Btn_Input] = ON; // Update current button state to pressed
             UI8 btn_signal = 48 + Btn_Input;
             HAL_UART_Transmit(&huart1, &btn_signal, 1, 100);
-            Jdg_State_Transition();
+            Main_Operation();
         }
     }
 }

@@ -30,6 +30,8 @@ UI8 Jdg_Btn_5(void);
 void State_Trans_Init(void);
 void Jdg_Transition(void);
 void Scrn_Operation(void);
+void Main_Operation(void);
+void Update_Scrn_State(void);
 
 //State change table for main 3 screens
 ScreenState MScrn_State_Table[STATE_SCREEN_COUNT][SCREEN_EVENT_COUNT] = {
@@ -100,7 +102,7 @@ AppState prevAppState;
 AppScreenState currAScrState;
 AppScreenState prevAScrState;
 
- // Initialize the state transition system if needed
+ // Initialize the state transition system
 void State_Trans_Init(void) {
     currScrMode = MODE_CHOOSE_APP;
     prevScrMode = MODE_CHOOSE_APP;
@@ -113,17 +115,36 @@ void State_Trans_Init(void) {
     Main_Scrn_EntryFunc[currScrState]();
 }
 
+void Main_Operation(){
+    if(currScrMode == MODE_CHOOSE_APP){
+        Jdg_Scrn_State_Trans();
+    }
+    else{
+        Jdg_App_State_Transition(&currAScrState, &prevAScrState);
+        Jdg_Fctn_Event();
+    }
+
+    if(currScrMode == MODE_CHOOSE_APP){
+        Scrn_Operation();
+        Update_Scrn_State();
+    }
+    else{
+        AppScrn_Operation(&currAScrState, &prevAScrState);
+        Update_AppScrn_State(&currAScrState, &prevAScrState);
+    }
+}
+
 // Implement logic to determine which event occurred
-void Jdg_State_Transition(void) {
+void Jdg_Scrn_State_Trans(void) {
 
     UI8 event_Screen = SCREEN_EVENT_NONE;
     UI8 event_App = APP_EVENT_NONE;
     UI8 result_Screen = OFF;
     UI8 result_App = OFF;
 
-    if(currScrMode == MODE_CHOOSE_APP) {                                       // Judge condition if no Application is selected         
+    if(currScrMode == MODE_CHOOSE_APP) {                                    // Judge condition if no Application is selected         
         
-        for (int i = 0; i < APP_EVENT_COUNT; i++) {                             // Check each event for the main application state
+        for (int i = 0; i < APP_EVENT_COUNT; i++) {                         // Check each event for the main application state
             if (event_App == APP_EVENT_NONE) {
                 result_App = App_Event_Jdg_Func[i]();
                 if (result_App == ON) {
@@ -132,7 +153,7 @@ void Jdg_State_Transition(void) {
             }
         }
         if(event_App != APP_EVENT_NONE){
-            currAppState = App_Array[event_App];                                //Update current Applcation State
+            currAppState = App_Array[event_App];                            //Update current Applcation State
             currScrMode = MODE_CHOOSE_FCTN;
         }                                       
 
@@ -147,39 +168,20 @@ void Jdg_State_Transition(void) {
         
         currScrState = MScrn_State_Table[currScrState][event_Screen];       //Update current Screen State
     }
-    else {
-        Jdg_App_State_Transition(&currAScrState, &prevAScrState);
-        Jdg_Fctn_Event();
-    }
-
-    Scrn_Operation();
-
-    if(currScrMode == MODE_CHOOSE_APP){
-        if(event_App != APP_EVENT_NONE){
-            prevAppState = currAppState;
-        }
-        prevScrState = currScrState;
-    }
 }
 
 void Scrn_Operation(void){
 
-
-    if(currScrMode == MODE_CHOOSE_APP){
-        
-        if(currScrState != prevScrState){
-            Main_Scrn_ExitFunc[prevScrState]();
-        }
-
-        Main_Scrn_EntryFunc[currScrState]();
-    }
-    else
-    {
-        AppScrn_EntryFctn_IF();
-    }
+    Main_Scrn_ExitFunc[prevScrState]();
+    Main_Scrn_EntryFunc[currScrState]();
 
 }
 
+void Update_Scrn_State(void){
+    if(currAppState != prevAppState){
+        prevAppState = currAppState;
+    }
+}
 
 // Implement logic to check if the button 0 was pressed
 UI8 Jdg_Btn_0(void) {
@@ -253,33 +255,30 @@ UI8 dummy_UI8_func(void)
 
 void Screen1_Entry(void) {
     // Implement the entry action for Screen 1
-    DrawBitMap(currScrState);
+    DrawScreenState(currScrState);
 }
 
 void Screen1_Exit(void) {
     // Implement the exit action for Screen 1
-    ssd1306_Fill(Black);
-    ssd1306_UpdateScreen(CS_PIN_0);
+    ClearScreen();
 }
 
 void Screen2_Entry(void) {
     // Implement the entry action for Screen 2
-    DrawBitMap(currScrState);
+    DrawScreenState(currScrState);
 }
 
 void Screen2_Exit(void) {
     // Implement the exit action for Screen 2
-    ssd1306_Fill(Black);
-    ssd1306_UpdateScreen(CS_PIN_1);
+    ClearScreen();
 }
 
 void Screen3_Entry(void) {
     // Implement the entry action for Screen 3
-    DrawBitMap(currScrState);
+    DrawScreenState(currScrState);
 }
 
 void Screen3_Exit(void) {
     // Implement the exit action for Screen 3
-    ssd1306_Fill(Black);
-    ssd1306_UpdateScreen(CS_PIN_2);
+    ClearScreen();
 }
