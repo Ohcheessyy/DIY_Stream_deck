@@ -56,6 +56,7 @@ typedef enum {
 
 typedef UI8 (*EventJudgeFunction)(void);
 typedef void (*ScreenFunction)(void);
+typedef void (*AFuncFunction)(void);
 typedef void (*AppFunction)(void);
 
 extern Mode currScrMode;

@@ -13,6 +13,10 @@ extern const unsigned char bitmap_youtube [];
 extern const unsigned char bitmap_obs [];
 // 'steam', 128x64px
 extern const unsigned char bitmap_steam [];
+//  'valorant-64', 128x64px
+extern const unsigned char bitmap_valorant [];
+// 'visual-studio-code', 128x64px
+extern const unsigned char bitmap_vs_code [];
 // 'go-back-arrow', 128x64px
 extern const unsigned char bitmap_go_back_arrow [];
 // 'microphone-black-shape', 128x64px

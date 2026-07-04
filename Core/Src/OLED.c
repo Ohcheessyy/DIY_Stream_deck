@@ -44,10 +44,6 @@ void DrawScreenState(ScreenState state)
         ssd1306_Fill(Black);
         ssd1306_DrawBitmap(0,0,bitmap_obs,128,64,White);
         ssd1306_UpdateScreen(CS_PIN_2);
-        
-        ssd1306_Fill(Black);
-        ssd1306_DrawBitmap(0,0,bitmap_steam,128,64,White);
-        ssd1306_UpdateScreen(CS_PIN_4);
 
         ssd1306_Fill(Black);
         ssd1306_DrawBitmap(0,0,bitmap_left_arrow,128,64,White);
@@ -60,8 +56,13 @@ void DrawScreenState(ScreenState state)
         break;
 
         case STATE_SCREEN_2:
-        ssd1306_Fill(White);
-        ssd1306_UpdateScreen(CS_PIN_1);    
+        ssd1306_Fill(Black);
+        ssd1306_DrawBitmap(0,0,bitmap_valorant,128,64,White);
+        ssd1306_UpdateScreen(CS_PIN_0);  
+        
+        ssd1306_Fill(Black);
+        ssd1306_DrawBitmap(0,0,bitmap_steam,128,64,White);
+        ssd1306_UpdateScreen(CS_PIN_1);
 
         ssd1306_Fill(Black);
         ssd1306_DrawBitmap(0,0,bitmap_left_arrow,128,64,White);
@@ -73,8 +74,9 @@ void DrawScreenState(ScreenState state)
         break;
 
         case STATE_SCREEN_3:
-        ssd1306_Fill(White);
-        ssd1306_UpdateScreen(CS_PIN_2);    
+        ssd1306_Fill(Black);
+        ssd1306_DrawBitmap(0,0,bitmap_vs_code,128,64,White);
+        ssd1306_UpdateScreen(CS_PIN_0);    
         
         ssd1306_Fill(Black);
         ssd1306_DrawBitmap(0,0,bitmap_left_arrow,128,64,White);

@@ -14,6 +14,9 @@
 
 void Jdg_App_State_Transition(AppScreenState *currState, AppScreenState *prevState);
 void Btn0_Fctn();
+void Btn1_Fctn();
+void Btn2_Fctn();
+void Btn4_Fctn();
 void AppScrn1_Entry(void);
 void AppScrn2_Entry(void);
 void AppScrn1_Exit(void);
@@ -54,12 +57,12 @@ AppFunction AppScrn_ExitFunc[APP_STATE_SCREEN_COUNT] = {
     &AppScrn2_Exit
 };
 
-FuncFunction Fctn_DoFucntion[FUNC_EVENT_COUNT] = {
+FuncFunction Fctn_DoFunction[FUNC_EVENT_COUNT] = {
     &dummy_void_func,
     &Btn0_Fctn,
-    &dummy_void_func,
-    &dummy_void_func,
-    &dummy_void_func
+    &Btn1_Fctn,
+    &Btn2_Fctn,
+    &Btn4_Fctn
 };
 
 void Jdg_App_State_Transition(AppScreenState *currState, AppScreenState *prevState)
@@ -95,7 +98,7 @@ void Jdg_Fctn_Event(void)
         }
     }
 
-    Fctn_DoFucntion[event_Fctn]();
+    Fctn_DoFunction[event_Fctn]();
 
 }
 
@@ -114,7 +117,66 @@ void Update_AppScrn_State(AppScreenState *currState, AppScreenState *prevState){
 
 void Btn0_Fctn(void)
 {
-    currScrMode = MODE_CHOOSE_APP;
+    if (currAScrState == APP_STATE_SCREEN_1) {
+        currScrMode = MODE_CHOOSE_APP;
+    }
+}
+
+void Btn1_Fctn(void)
+{
+    // if (currAScrState == APP_STATE_SCREEN_1) {
+    //     switch (currScrState) {
+    //         case STATE_SCREEN_1:
+    //             char msg[] = "D1";
+    //             HAL_UART_Transmit(&huart1, (UI8*)msg , strlen(msg), 100);
+    //             break;
+    //         case STATE_SCREEN_2:
+    //             char msg[] = "V";
+    //             HAL_UART_Transmit(&huart1, (UI8*)msg , strlen(msg), 100);
+    //             break;               
+    //         case STATE_SCREEN_3:
+    //         default:
+    //             break;
+    //     }
+    // }
+}
+
+void Btn2_Fctn(void)
+{
+    // if (currAScrState == APP_STATE_SCREEN_1) {
+    //     switch (currScrState) {
+    //         case STATE_SCREEN_1:
+    //             char msg[] = "D1";
+    //             HAL_UART_Transmit(&huart1, (UI8*)msg , strlen(msg), 100);
+    //             break;
+    //         case STATE_SCREEN_2:
+    //             char msg[] = "V";
+    //             HAL_UART_Transmit(&huart1, (UI8*)msg , strlen(msg), 100);
+    //             break;               
+    //         case STATE_SCREEN_3:
+    //         default:
+    //             break;
+    //     }
+    // }
+}
+
+void Btn4_Fctn(void)
+{
+    // if (currAScrState == APP_STATE_SCREEN_1) {
+    //     switch (currScrState) {
+    //         case STATE_SCREEN_1:
+    //             char msg[] = "D1";
+    //             HAL_UART_Transmit(&huart1, (UI8*)msg , strlen(msg), 100);
+    //             break;
+    //         case STATE_SCREEN_2:
+    //             char msg[] = "V";
+    //             HAL_UART_Transmit(&huart1, (UI8*)msg , strlen(msg), 100);
+    //             break;               
+    //         case STATE_SCREEN_3:
+    //         default:
+    //             break;
+    //     }
+    // }
 }
 
 void AppScrn1_Entry(void)
@@ -122,13 +184,25 @@ void AppScrn1_Entry(void)
     ssd1306_Fill(Black);
     ssd1306_DrawBitmap(0,0,bitmap_go_back_arrow,128,64,White);
     ssd1306_UpdateScreen(CS_PIN_0);
+    
+    ssd1306_Fill(Black);
+    ssd1306_DrawBitmap(0,0,bitmap_left_arrow,128,64,White);
+    ssd1306_UpdateScreen(CS_PIN_3);
+
+    ssd1306_Fill(Black);
+    ssd1306_DrawBitmap(0,0,bitmap_right_arrow,128,64,White);
+    ssd1306_UpdateScreen(CS_PIN_5);    
 }
 
 void AppScrn2_Entry(void)
 {
     ssd1306_Fill(Black);
-    ssd1306_DrawBitmap(0,0,bitmap_microphone_black_shape,128,64,White);
-    ssd1306_UpdateScreen(CS_PIN_1);
+    ssd1306_DrawBitmap(0,0,bitmap_left_arrow,128,64,White);
+    ssd1306_UpdateScreen(CS_PIN_3);
+
+    ssd1306_Fill(Black);
+    ssd1306_DrawBitmap(0,0,bitmap_right_arrow,128,64,White);
+    ssd1306_UpdateScreen(CS_PIN_5);
 }
 
 void AppScrn1_Exit(void)

@@ -88,8 +88,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
         if (Btn_Input != BUTTONMAX)
         {
             currBtnState[Btn_Input] = ON; // Update current button state to pressed
-            UI8 btn_signal = 48 + Btn_Input;
-            HAL_UART_Transmit(&huart1, &btn_signal, 1, 100);
             Main_Operation();
         }
     }

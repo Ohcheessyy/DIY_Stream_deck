@@ -12,6 +12,7 @@
 #include "ssd1306.h"
 #include "App_display_control.h"
 #include "Image_bit_map.h"
+#include <string.h>
 
 void dummy_void_func(void);
 UI8 dummy_UI8_func(void);
@@ -32,6 +33,10 @@ void Jdg_Transition(void);
 void Scrn_Operation(void);
 void Main_Operation(void);
 void Update_Scrn_State(void);
+void Btn0_AFctn(void);
+void Btn1_AFctn(void);
+void Btn2_AFctn(void);
+void Btn4_AFctn(void);
 
 //State change table for main 3 screens
 ScreenState MScrn_State_Table[STATE_SCREEN_COUNT][SCREEN_EVENT_COUNT] = {
@@ -79,6 +84,14 @@ ScreenFunction Main_Scrn_ExitFunc[STATE_SCREEN_COUNT] = {
     &Screen1_Exit, // STATE_SCREEN_1
     &Screen2_Exit, // STATE_SCREEN_2
     &Screen3_Exit  // STATE_SCREEN_3
+};
+
+AFuncFunction AFctn_DoFunction[APP_EVENT_COUNT] = {
+    &dummy_void_func,
+    &Btn0_AFctn,
+    &Btn1_AFctn,
+    &Btn2_AFctn,
+    &Btn4_AFctn
 };
 
 //Deploy this later
@@ -155,6 +168,7 @@ void Jdg_Scrn_State_Trans(void) {
         if(event_App != APP_EVENT_NONE){
             currAppState = App_Array[event_App];                            //Update current Applcation State
             currScrMode = MODE_CHOOSE_FCTN;
+            AFctn_DoFunction[event_App]();
         }                                       
 
         for (int i = 0; i < SCREEN_EVENT_COUNT; i++) {                      // Check each event for the main screen state
@@ -281,4 +295,69 @@ void Screen3_Entry(void) {
 void Screen3_Exit(void) {
     // Implement the exit action for Screen 3
     ClearScreen();
+}
+
+void Btn0_AFctn(void)
+{
+    char msg[10];
+    switch (currScrState) {
+        case STATE_SCREEN_1:
+            strcpy(msg, "D");
+            HAL_UART_Transmit(&huart1, (UI8*)msg , strlen(msg), 100);
+            break;
+        case STATE_SCREEN_2:
+            strcpy(msg, "V");
+            HAL_UART_Transmit(&huart1, (UI8*)msg , strlen(msg), 100);
+            break;               
+        case STATE_SCREEN_3:
+            strcpy(msg, "VS");
+            HAL_UART_Transmit(&huart1, (UI8*)msg , strlen(msg), 100);
+            break;        
+        default:
+            break;
+    }
+}
+
+void Btn1_AFctn(void)
+{
+    char msg[10];
+    switch (currScrState) {
+        case STATE_SCREEN_1:
+            strcpy(msg, "YT");
+            HAL_UART_Transmit(&huart1, (UI8*)msg , strlen(msg), 100);
+            break;
+        case STATE_SCREEN_2:
+            strcpy(msg, "S");
+            HAL_UART_Transmit(&huart1, (UI8*)msg , strlen(msg), 100);
+            break;               
+        case STATE_SCREEN_3:
+        default:
+            break;
+    }
+}
+
+void Btn2_AFctn(void)
+{
+    char msg[10];
+    switch (currScrState) {
+        case STATE_SCREEN_1:
+            strcpy(msg, "O");
+            HAL_UART_Transmit(&huart1, (UI8*)msg , strlen(msg), 100);
+            break;
+        case STATE_SCREEN_2:            
+        case STATE_SCREEN_3:
+        default:
+            break;
+    }
+}
+
+void Btn4_AFctn(void)
+{
+    switch (currScrState) {
+        case STATE_SCREEN_1:
+        case STATE_SCREEN_2:            
+        case STATE_SCREEN_3:
+        default:
+            break;
+    }
 }
